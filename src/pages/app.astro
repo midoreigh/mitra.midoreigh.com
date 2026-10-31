@@ -33,9 +33,9 @@ const convertiLevels = [0, 40, 55, 70, 80, 90, 100, 110] as const;
       </div>
 
       <div class="app-actions">
-        <button class="action-btn" type="button" data-action="signout" aria-label="Account">
+        <button class="action-btn" type="button" data-action="signout" aria-label="Sign Out">
           <Icon name="logOut" size={16} />
-          <span>Account</span>
+          <span>Sign Out</span>
         </button>
       </div>
     </header>
@@ -193,18 +193,21 @@ const convertiLevels = [0, 40, 55, 70, 80, 90, 100, 110] as const;
     <!-- Upfront Sign-In Modal -->
     <div class="overlay-backdrop is-hidden" id="signin-overlay" role="dialog" aria-modal="true" aria-labelledby="signin-title">
       <div class="modal-card">
-        <div class="modal-header">
-          <h3 id="signin-title">Sign in to Mitra</h3>
+        <div class="modal-header" style="margin-bottom: 6px;">
+          <h3 id="signin-title">Welcome to Mitra for MirAIe</h3>
         </div>
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.4;">
+          Use the same login as the MirAIe app.
+        </p>
         <div class="error-banner" role="alert"></div>
         <form id="signin-form">
           <div class="form-group">
-            <label for="input-username">Mobile or Email</label>
-            <input class="form-input" id="input-username" type="text" autocomplete="username" placeholder="10-digit mobile (+91) or email" required />
+            <label for="input-username">Mobile number or email</label>
+            <input class="form-input" id="input-username" type="text" autocomplete="username" placeholder="98765 43210 or name@example.com" required />
           </div>
           <div class="form-group">
-            <label for="input-password">Password</label>
-            <input class="form-input" id="input-password" type="password" autocomplete="current-password" placeholder="MirAIe account password" required />
+            <label for="input-password">MirAIe password</label>
+            <input class="form-input" id="input-password" type="password" autocomplete="current-password" placeholder="MirAIe password" required />
           </div>
           <button class="submit-btn" id="signin-submit" type="submit">Sign In</button>
         </form>
