@@ -197,7 +197,16 @@ html.js .step:not(.is-active) { visibility: hidden; opacity: 0; }
 main > section:not(.story) {
   position: relative;
   padding: clamp(96px, 13vw, 190px) var(--gutter) 0;
+  /* Jumping to a section lands on its heading, just under the header, not in the gap above it. */
+  scroll-margin-top: calc(var(--bar) + 16px - clamp(96px, 13vw, 190px));
 }
+/* A download link lands on its own card. */
+.card[id] { scroll-margin-top: calc(var(--bar) + 16px); }
+
+/* On Android phones, Android comes first: in the hero buttons and the download cards. */
+.on-android .actions .hero-android { order: -1; background: #fff; color: #0b0d13; border-color: transparent; }
+.on-android .actions .hero-mac { background: rgba(255, 255, 255, 0.1); color: var(--text); border-color: rgba(255, 255, 255, 0.12); }
+.on-android .cards .android { order: -1; }
 main > section:not(.story)::before {
   content: '';
   position: absolute;

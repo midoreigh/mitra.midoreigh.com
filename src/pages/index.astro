@@ -103,8 +103,8 @@ const features = FEATURES;
                     while it flows. A free, open-source alternative to the MirAIe app.
                   </p>
                   <div class="actions">
-                    <a class="button primary" href="#download"><Icon name="apple" size={18} />Download for Mac</a>
-                    <a class="button" href="#download"><Icon name="android" size={18} />Get it for Android</a>
+                    <a class="button primary hero-mac" href="#download-mac"><Icon name="apple" size={18} />Download for Mac</a>
+                    <a class="button hero-android" href="#download-android"><Icon name="android" size={18} />Get it for Android</a>
                   </div>
                   <p class="hint">Go on, try the panel. It’s the real thing, minus the AC.</p>
                 </>
@@ -342,7 +342,7 @@ const features = FEATURES;
         <p>Works with Panasonic ACs you control through the MirAIe app.</p>
       </div>
       <div class="cards">
-        <div class="card" data-reveal>
+        <div class="card mac" id="download-mac" data-reveal>
           <Icon name="apple" size={32} />
           <h3>Mac</h3>
           <p>macOS 26 or later, on Apple silicon or Intel.</p>
@@ -352,7 +352,7 @@ const features = FEATURES;
             <a class="notes" href={mac.page}>What’s new <Icon name="arrow" size={14} /></a>
           </div>
         </div>
-        <div class="card" data-reveal>
+        <div class="card android" id="download-android" data-reveal>
           <Icon name="android" size={32} />
           <h3>Android</h3>
           <p>Android 8.0 or later.</p>
