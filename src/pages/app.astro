@@ -16,13 +16,14 @@ const horizontal = ['Far left', 'Left', 'Centre', 'Right', 'Far right'];
 const convertiLevels = [0, 40, 55, 70, 80, 90, 100, 110] as const;
 ---
 
-<Base title="Mitra Web · Panasonic AC Control" description="Control your Panasonic MirAIe AC right from your browser.">
+<Base title="Mitra Web (Beta) · Panasonic AC Control" description="Control your Panasonic MirAIe AC right from your browser.">
   <div class="app-root">
     <!-- Header -->
     <header class="app-header">
       <a class="app-brand" href="/" aria-label="Mitra Home">
         <img src="/icon.png?v=2" width="28" height="28" alt="" />
-        <span>Mitra Web</span>
+        <span class="app-brand-title">Mitra Web</span>
+        <span class="beta-badge">Beta</span>
       </a>
 
       <div class="device-picker">
@@ -194,7 +195,10 @@ const convertiLevels = [0, 40, 55, 70, 80, 90, 100, 110] as const;
     <div class="overlay-backdrop is-hidden" id="signin-overlay" role="dialog" aria-modal="true" aria-labelledby="signin-title">
       <div class="modal-card">
         <div class="modal-header" style="margin-bottom: 6px;">
-          <h3 id="signin-title">Welcome to Mitra for MirAIe</h3>
+          <h3 id="signin-title" style="display: flex; align-items: center; gap: 8px;">
+            <span>Welcome to Mitra</span>
+            <span class="beta-badge">Beta</span>
+          </h3>
         </div>
         <p style="font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.4;">
           Use the same login as the MirAIe app.

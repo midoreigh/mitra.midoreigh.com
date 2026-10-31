@@ -31,13 +31,28 @@
 .app-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   font-weight: 650;
   font-size: 16px;
   text-decoration: none;
   color: var(--text);
 }
 .app-brand img { border-radius: 6px; }
+
+.beta-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(255, 214, 10, 0.16);
+  color: #ffd60a;
+  border: 1px solid rgba(255, 214, 10, 0.35);
+  line-height: 1.5;
+  display: inline-flex;
+  align-items: center;
+}
 
 .device-picker {
   display: flex;
@@ -878,8 +893,12 @@ button, input, [role="button"], .panel-pill, .feature-btn, .schedule-btn, .conve
 }
 
 @media (max-width: 380px) {
-  .app-brand span {
+  .app-brand-title {
     font-size: 14px;
+  }
+  .beta-badge {
+    font-size: 9px;
+    padding: 1px 5px;
   }
   .action-btn span {
     display: none;
