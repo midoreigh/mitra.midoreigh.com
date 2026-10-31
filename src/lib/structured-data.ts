@@ -64,7 +64,7 @@ export function structuredData(mac: Release, android: Release) {
         author: { '@id': author },
         publisher: { '@id': author },
         sameAs: [SITE.repo],
-        subjectOf: { '@type': 'BlogPosting', url: SITE.blogPost, headline: 'Mitra: Every Setting on My AC, One Tap Away' },
+        subjectOf: { '@type': 'BlogPosting', url: SITE.blogPost, headline: 'Mitra: My Panasonic AC, From My Mac, One Click Away' },
       },
       {
         '@type': 'SoftwareSourceCode',
