@@ -37,6 +37,10 @@ export const FAQ: { q: string; a: string }[] = [
     a: 'Yes: Mitra. There’s been no easy way to control a Panasonic MirAIe AC from a computer, only the remote or the phone app. Mitra puts your AC in the menu bar of your MacBook or any Mac, with the set temperature beside the icon, every control one click away, timers and sleep profiles, and Siri and Shortcuts. It runs on macOS 26 or later, on Apple silicon or Intel, and there’s an Android app too.',
   },
   {
+    q: 'Can I use it from a web browser?',
+    a: 'Yes. The <a href="/app">Mitra web app</a> lets you control your real AC directly from any browser without installing anything.',
+  },
+  {
     q: 'Why does my Mac ask before opening it?',
     a: 'Mitra isn’t signed with a paid Apple Developer ID. The first time, click <b>Open Anyway</b> in System Settings › Privacy &amp; Security. After each update macOS asks for your password once or twice before the new version can read your saved sign-in; choose <b>Always Allow</b> and it stays quiet until the next one.',
   },
