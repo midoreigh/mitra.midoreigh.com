@@ -6,9 +6,9 @@ import { REPO } from './releases';
 export const SITE = {
   name: 'Mitra for MirAIe',
   url: 'https://mitra.midoreigh.com',
-  title: 'Mitra for MirAIe — every setting on your AC, one tap away',
+  title: 'Mitra for MirAIe — control your Panasonic AC from your Mac',
   description:
-    'A free, open-source alternative to the MirAIe app for Panasonic ACs, on Mac and Android. Every mode, fan speed and air direction one tap away, plus timers and sleep profiles.',
+    'Control your Panasonic MirAIe AC from your MacBook or any Mac: a free, open-source menu bar app with every mode, fan speed and air direction one click away, plus timers and sleep profiles. Also on Android.',
   author: { name: 'Mido Reigh', url: 'https://midoreigh.com' },
   blogPost: 'https://midoreigh.com/blog/mitra-for-miraie',
   repo: REPO,
@@ -34,7 +34,7 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'Is there a MirAIe app for Mac?',
-    a: 'Mitra puts your MirAIe AC in your Mac’s menu bar, with the set temperature beside the icon, every control one click away, and Siri and Shortcuts. It runs on macOS 26 or later, on Apple silicon or Intel, and there’s an Android app too.',
+    a: 'Yes: Mitra. It puts your Panasonic MirAIe AC in the menu bar of your MacBook or any Mac, with the set temperature beside the icon, every control one click away, timers and sleep profiles, and Siri and Shortcuts. It runs on macOS 26 or later, on Apple silicon or Intel, and there’s an Android app too.',
   },
   {
     q: 'Why does my Mac ask before opening it?',

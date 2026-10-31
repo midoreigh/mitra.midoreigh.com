@@ -33,10 +33,10 @@ const panel = await sharp('scripts/og-panel.png').resize(PANEL_W, PANEL_H).compo
 const border = Buffer.from(`<svg width="${PANEL_W}" height="${PANEL_H}"><rect x=".5" y=".5" width="${PANEL_W - 1}" height="${PANEL_H - 1}" rx="22" fill="none" stroke="#fff" stroke-opacity=".14"/></svg>`);
 
 const icon = await sharp('public/icon.png').trim().resize(112, 112).png().toBuffer();
-const title = await text('<span font_weight="700" font_size="64pt" foreground="#f4f6fb">Mitra for MirAIe</span>', 640);
-const tagline = await text('<span font_weight="500" font_size="38pt" foreground="#f4f6fb">Every setting on your AC,\none tap away.</span>', 640);
+const title = await text('<span font_weight="700" font_size="64pt" foreground="#f4f6fb" font_features="cv08">Mitra for MirAIe</span>', 640);
+const tagline = await text('<span font_weight="500" font_size="38pt" foreground="#f4f6fb">Your Panasonic AC,\nfrom your Mac.</span>', 640);
 const sub = await text(
-  '<span font_weight="400" font_size="22pt" foreground="#e2e8f5" alpha="66%">No more cycling through modes. Timers and sleep\nprofiles for Panasonic ACs on MirAIe.</span>',
+  '<span font_weight="400" font_size="22pt" foreground="#e2e8f5" alpha="66%">Every mode, fan speed and air direction one click\naway in your menu bar. Timers and sleep profiles too.</span>',
   640,
 );
 const chips = await text(

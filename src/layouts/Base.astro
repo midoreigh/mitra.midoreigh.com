@@ -13,7 +13,7 @@ interface Props {
 
 const { title = SITE.title, description = SITE.description, jsonLd, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const image = new URL('/og.png', Astro.site);
+const image = new URL('/og.png?v=2', Astro.site);
 const imageAlt =
   'Mitra for MirAIe: the app icon, the title and tagline, and the Mac panel open under the menu bar with every mode, fan speed and louver one click away';
 ---

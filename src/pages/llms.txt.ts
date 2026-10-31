@@ -9,7 +9,7 @@ export const GET: APIRoute = async () => {
 
 > ${SITE.description}
 
-Mitra is a free, open-source (MIT) alternative to the MirAIe app for Panasonic air conditioners, for the Mac menu bar (macOS 26+) and Android (8.0+). It signs in with your MirAIe account and controls the same ACs. Instead of cycling through modes, fan speeds and air directions one tap at a time as the MirAIe remote and app do, Mitra shows every option at once, so each is one click or tap away. It also adds timers and sleep profiles, which other apps for these ACs don't have. It also lets you control a MirAIe AC from a Mac. It's independent and unofficial, not affiliated with Panasonic.
+Mitra lets you control a Panasonic MirAIe air conditioner from your Mac: it lives in the menu bar of a MacBook or any Mac (macOS 26+), and there's an Android app (8.0+) too. It's a free, open-source (MIT) alternative to the MirAIe app that signs in with your MirAIe account and controls the same ACs. Instead of cycling through modes, fan speeds and air directions one tap at a time as the MirAIe remote and app do, Mitra shows every option at once, so each is one click or tap away. It also adds timers and sleep profiles, which other apps for these ACs don't have. It's independent and unofficial, not affiliated with Panasonic.
 
 ## Docs
 
