@@ -14,11 +14,11 @@ export async function siteMarkdown(): Promise<string> {
 
 Website: ${SITE.url} · Source: ${SITE.repo} · Made by [${SITE.author.name}](${SITE.author.url})
 
-Mitra for MirAIe lets you control a Panasonic MirAIe air conditioner from your Mac. It lives in the menu bar of your MacBook or any Mac, and there's an Android app too. It's a free, open-source alternative to the MirAIe app: you sign in with your MirAIe account and control the same ACs. It's independent and unofficial, free and open source (MIT licence). Mitra means friend.
+Mitra for MirAIe lets you control a Panasonic MirAIe air conditioner from your Mac. Until now there's been no easy way to run one from a computer, only the remote or the phone app; Mitra lives in the menu bar of your MacBook or any Mac, and there's an Android app too. It's a free, open-source alternative to the MirAIe app: you sign in with your MirAIe account and control the same ACs. It's independent and unofficial, free and open source (MIT licence). Mitra means friend.
 
 ## Why it exists: no more cycling
 
-The MirAIe remote and app make Mode a single button: Auto, Cool, Dry, tap after tap. Fan speed and air direction work the same way. Mitra puts every option side by side, so any mode, fan speed or louver position is one click or tap away. Dry is one tap instead of three.
+The MirAIe remote and app both make Mode a single button: Auto, Cool, Dry, tap after tap. Fan speed and air direction work the same way. Mitra puts every option side by side, so any mode, fan speed or louver position is one click or tap away. Dry is one tap instead of three.
 
 ## What you can do
 
