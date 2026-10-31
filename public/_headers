@@ -1,0 +1,15 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: interest-cohort=()
+  X-Frame-Options: SAMEORIGIN
+
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/index.md
+  Content-Type: text/markdown; charset=utf-8
+  X-Robots-Tag: noindex
+
+/llms-full.txt
+  X-Robots-Tag: noindex

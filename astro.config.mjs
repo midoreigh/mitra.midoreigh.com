@@ -8,5 +8,6 @@ export default defineConfig({
   build: { format: 'file' },
   server: { port: 4322 },
   devToolbar: { enabled: false },
-  integrations: [sitemap()],
+  // lastmod is the build date: the site is rebuilt whenever Mitra or the page changes.
+  integrations: [sitemap({ serialize: (item) => ({ ...item, lastmod: new Date().toISOString() }) })],
 });
