@@ -9,8 +9,8 @@ import { reduced } from './motion';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
-const $ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => root.querySelector<T>(sel)!;
-const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => [...root.querySelectorAll<T>(sel)];
+const $ = <T extends Element = HTMLElement>(sel: string, root: any = document) => root.querySelector(sel)! as T;
+const $$ = <T extends Element = HTMLElement>(sel: string, root: any = document) => [...root.querySelectorAll(sel)] as T[];
 
 const stage = $('.stage');
 const beats = $$('[data-beat]');

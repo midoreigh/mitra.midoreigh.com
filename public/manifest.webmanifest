@@ -1,0 +1,22 @@
+{
+  "name": "Mitra for MirAIe",
+  "short_name": "Mitra",
+  "description": "Control your Panasonic MirAIe AC from your browser.",
+  "start_url": "/app",
+  "display": "standalone",
+  "background_color": "#07090f",
+  "theme_color": "#07090f",
+  "icons": [
+    {
+      "src": "/favicon-96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

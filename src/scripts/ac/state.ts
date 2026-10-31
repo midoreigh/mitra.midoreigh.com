@@ -1,7 +1,13 @@
-// The demo AC's state, shared by the drawing, the control panel and the scroll story.
+// The AC's state, shared by the drawing, the control panel, the scroll story and the live app.
 
 export type Mode = 'auto' | 'cool' | 'dry' | 'fan' | 'heat';
 export type Fan = 'auto' | 'quiet' | 'low' | 'medium' | 'high';
+
+export interface ACCapabilities {
+  heat: boolean;
+  nanoe: boolean;
+  converti: boolean;
+}
 
 export interface ACState {
   on: boolean;
@@ -10,10 +16,51 @@ export interface ACState {
   fan: Fan;
   /** Up/down louver: 0 swing, 1 (highest) to 5 (lowest). */
   vertical: number;
-  /** Left/right louver: 0 swing, 1 (far left) to 5 (far right). */
+  /** Left/right louver: 0 swing, 1 (far left) to 5 (far right) in UI display slot. */
   horizontal: number;
   display: boolean;
+
+  // Extended properties for live AC control
+  roomTemperature?: number;
+  eco: boolean;
+  powerful: boolean;
+  /** Converti7 cooling level: 0 is off, or 40, 55, 70, 80, 90, 100, 110. */
+  converti: number;
+  nanoe: boolean;
+  isOnline: boolean;
+  offTimer?: Date | null;
+  onTimer?: Date | null;
+  sleepProfile?: string | null;
+  sleepHour?: number | null;
 }
+
+export const Converti = {
+  off: 0,
+  levels: [40, 55, 70, 80, 90, 100, 110] as const,
+};
+
+/**
+ * Louver positions. MirAIe uses 0 for swing, and 1-5 for fixed positions.
+ * For horizontal, MirAIe values are out of order: 1 = center, 2 = far left, 3 = left, 4 = right, 5 = far right.
+ * The UI slot order from left to right is: [2, 3, 1, 4, 5].
+ */
+export const Louver = {
+  swing: 0,
+  horizontalLeftToRight: [2, 3, 1, 4, 5] as const,
+
+  /** Converts MirAIe horizontal position (1-5) to 1-based UI visual slot (1 to 5). */
+  horizontalSlot(pos: number): number {
+    if (pos === 0) return 0;
+    const idx = this.horizontalLeftToRight.indexOf(pos as any);
+    return idx >= 0 ? idx + 1 : 3;
+  },
+
+  /** Converts 1-based UI visual slot (1 to 5) to MirAIe horizontal position (1-5). */
+  slotToHorizontal(slot: number): number {
+    if (slot === 0) return 0;
+    return this.horizontalLeftToRight[Math.max(0, Math.min(4, slot - 1))] ?? 1;
+  },
+};
 
 type RGB = [number, number, number];
 
@@ -37,6 +84,92 @@ export const MODE_NAMES: Record<Mode, string> = {
 export const FAN_NAMES: Record<Fan, string> = {
   auto: 'Auto', quiet: 'Quiet', low: 'Low', medium: 'Medium', high: 'High',
 };
+
+/** Decodes room temperature, handling firmware 3.02+ sub-degree packing */
+export function decodeRoomTemperature(value: any, firmware?: string): number | null {
+  if (value === undefined || value === null) return null;
+  const str = String(value);
+  const parts = str.split('.');
+  const vParts = (firmware || '').split('.').map((p) => parseInt(p, 10)).filter((n) => !isNaN(n));
+  const is302 = vParts.length >= 2 && (vParts[0] > 3 || (vParts[0] === 3 && vParts[1] >= 2));
+
+  if (is302 && parts.length === 2) {
+    const fraction = parseFloat(parts[0]);
+    const degrees = parseFloat(parts[1]);
+    if (fraction < 256 && degrees >= 10 && degrees <= 50) {
+      return degrees + fraction / 256;
+    }
+  }
+
+  const num = parseFloat(str);
+  return isNaN(num) ? null : num;
+}
+
+/** Parses raw MirAIe status fields into an ACState patch */
+export function parseStatusFields(fields: Record<string, any>): Partial<ACState> {
+  const patch: Partial<ACState> = {};
+
+  if (fields.ps !== undefined) {
+    patch.on = fields.ps === 'on';
+  }
+  if (fields.actmp !== undefined) {
+    const t = parseFloat(String(fields.actmp));
+    if (!isNaN(t)) patch.setpoint = t;
+  }
+  if (fields.acmd !== undefined && fields.acmd in MODE_NAMES) {
+    patch.mode = fields.acmd as Mode;
+  }
+  if (fields.acfs !== undefined && fields.acfs in FAN_NAMES) {
+    patch.fan = fields.acfs as Fan;
+  }
+  if (fields.acvs !== undefined) {
+    patch.vertical = parseInt(String(fields.acvs), 10) || 0;
+  }
+  if (fields.achs !== undefined) {
+    const rawH = parseInt(String(fields.achs), 10) || 0;
+    patch.horizontal = Louver.horizontalSlot(rawH);
+  }
+  if (fields.acdc !== undefined) {
+    patch.display = fields.acdc === 'on';
+  }
+  if (fields.acem !== undefined) {
+    patch.eco = fields.acem === 'on';
+  }
+  if (fields.acpm !== undefined) {
+    patch.powerful = fields.acpm === 'on';
+  }
+  if (fields.cnv !== undefined) {
+    patch.converti = parseInt(String(fields.cnv), 10) || 0;
+  }
+  if (fields.acng !== undefined) {
+    patch.nanoe = fields.acng === 'on';
+  }
+  if (fields.onlineStatus !== undefined) {
+    patch.isOnline = String(fields.onlineStatus).toLowerCase() === 'true';
+  }
+  if (fields.rmtmp !== undefined) {
+    const r = decodeRoomTemperature(fields.rmtmp, fields.V);
+    if (r !== null) patch.roomTemperature = r;
+  }
+
+  // Timers
+  if (Array.isArray(fields.actm) && fields.actm.length >= 2) {
+    const offSec = Number(fields.actm[0]);
+    const onSec = Number(fields.actm[1]);
+    patch.offTimer = offSec > 0 ? new Date(offSec * 1000) : null;
+    patch.onTimer = onSec > 0 ? new Date(onSec * 1000) : null;
+  }
+
+  // Sleep
+  if (fields.acsp !== undefined) {
+    patch.sleepProfile = fields.acsp === 'none' || fields.acsp === 'off' ? null : String(fields.acsp);
+  }
+  if (fields.sleep_indx !== undefined) {
+    patch.sleepHour = parseInt(String(fields.sleep_indx), 10) || null;
+  }
+
+  return patch;
+}
 
 /** What the AC is doing, in a few words, e.g. "Cooling to 24°". */
 export function summary(s: ACState): string {

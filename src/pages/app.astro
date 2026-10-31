@@ -1,0 +1,260 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import '../styles/app.css';
+
+const modes = [
+  ['auto', 'Auto'], ['cool', 'Cool'], ['dry', 'Dry'], ['fan', 'Fan'], ['heat', 'Heat'],
+] as const;
+
+const fans = [
+  ['auto', 'Auto'], ['quiet', 'Quiet'], ['low', 'Low'], ['medium', 'Medium'], ['high', 'High'],
+] as const;
+
+const vertical = ['Highest', 'High', 'Middle', 'Low', 'Lowest'];
+const horizontal = ['Far left', 'Left', 'Centre', 'Right', 'Far right'];
+const convertiLevels = [0, 40, 55, 70, 80, 90, 100, 110] as const;
+---
+
+<Base title="Mitra Web · Panasonic AC Control" description="Control your Panasonic MirAIe AC right from your browser.">
+  <div class="app-root">
+    <!-- Header -->
+    <header class="app-header">
+      <a class="app-brand" href="/" aria-label="Mitra Home">
+        <img src="/icon.png?v=2" width="28" height="28" alt="" />
+        <span>Mitra Web</span>
+      </a>
+
+      <div class="device-picker">
+        <button class="device-btn" type="button" aria-label="Device status">
+          <span class="status-dot demo"></span>
+          <span data-device-name>Demo AC</span>
+        </button>
+      </div>
+
+      <div class="app-actions">
+        <button class="action-btn" type="button" data-action="signout" aria-label="Account">
+          <Icon name="logOut" size={16} />
+          <span>Account</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Stage -->
+    <main class="app-stage off">
+      <div class="app-backdrop" aria-hidden="true"></div>
+
+      <div class="app-canvas-container">
+        <canvas class="app-canvas" aria-hidden="true"></canvas>
+        <button class="app-unit-btn" type="button" aria-label="Turn the AC on"></button>
+        <div class="app-banner" data-banner style="opacity: 0;"></div>
+      </div>
+
+      <!-- Docked Controls -->
+      <div class="app-dock">
+        <!-- Floating Converti7 Glass Strip (Android style) -->
+        <div class="converti-strip-container is-hidden" id="converti-strip" role="region" aria-label="Converti7 cooling capacity">
+          <span class="converti-strip-title">Converti7 cooling</span>
+          <div class="converti-pill-track">
+            {convertiLevels.map((lvl) => (
+              <button
+                class="converti-pill"
+                type="button"
+                data-converti-level={lvl}
+                aria-pressed={lvl === 0 ? 'true' : 'false'}
+              >
+                {lvl === 0 ? 'Off' : `${lvl}%`}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Glass Control Panel -->
+        <div class="app-panel off" role="region" aria-label="Air conditioner controls">
+          <!-- Top Row -->
+          <div class="panel-row top">
+            <button class="panel-power" type="button" data-power aria-pressed="false" aria-label="Power">
+              <Icon name="power" size={20} />
+            </button>
+            <div class="panel-readout">
+              <div class="temp-row">
+                <span class="panel-temp"><span data-temp>24</span>°</span>
+                <span class="panel-room-temp" data-room-temp style="display: none;">Room 27°</span>
+              </div>
+              <span class="panel-summary" data-summary aria-live="polite">Off</span>
+            </div>
+            <div class="panel-stepper">
+              <button type="button" data-step-temp="-1" aria-label="Cooler"><Icon name="minus" size={18} /></button>
+              <button type="button" data-step-temp="1" aria-label="Warmer"><Icon name="plus" size={18} /></button>
+            </div>
+          </div>
+
+          <!-- Mode Row -->
+          <div class="panel-row">
+            <span class="panel-label">Mode<b data-label="mode">Cool</b></span>
+            <div class="panel-track">
+              {modes.map(([id, name]) => (
+                <button
+                  class="panel-pill mode"
+                  type="button"
+                  data-set="mode"
+                  data-value={id}
+                  aria-label={name}
+                  aria-pressed={id === 'cool' ? 'true' : 'false'}
+                >
+                  <Icon name={id} size={18} />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <!-- Fan Speed Row -->
+          <div class="panel-row">
+            <span class="panel-label">Fan<b data-label="fan">Auto</b></span>
+            <div class="panel-track">
+              {fans.map(([id, name]) => (
+                <button
+                  class="panel-pill fan"
+                  type="button"
+                  data-set="fan"
+                  data-value={id}
+                  aria-pressed={id === 'auto' ? 'true' : 'false'}
+                >
+                  {name === 'Medium' ? 'Med' : name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <!-- Louvers Row -->
+          <div class="panel-row louvers">
+            <div class="louvers-track" aria-label="Up and down">
+              <button class="panel-pill" type="button" data-set="vertical" data-value="0" aria-label="Swing up and down" aria-pressed="false">
+                <Icon name="updown" size={16} />
+              </button>
+              {vertical.map((name, i) => (
+                <button class="panel-pill" type="button" data-set="vertical" data-value={i + 1} aria-label={name} aria-pressed={i === 2 ? 'true' : 'false'}>
+                  <span class="vane-line" style={`--a: ${12 + i * 15}deg`} />
+                </button>
+              ))}
+            </div>
+
+            <div class="louvers-track" aria-label="Left and right">
+              <button class="panel-pill" type="button" data-set="horizontal" data-value="0" aria-label="Swing left and right" aria-pressed="false">
+                <Icon name="leftright" size={16} />
+              </button>
+              {horizontal.map((name, i) => (
+                <button class="panel-pill" type="button" data-set="horizontal" data-value={i + 1} aria-label={name} aria-pressed={i === 2 ? 'true' : 'false'}>
+                  <span class="vane-line upright" style={`--a: ${(i - 2) * 17}deg`} />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <!-- Equal-width Features Row (Android style) -->
+          <div class="features-row">
+            <button class="feature-btn eco" type="button" data-feature="eco" aria-pressed="false" aria-label="Eco mode">
+              <Icon name="eco" size={16} />
+              <span>Eco</span>
+            </button>
+            <button class="feature-btn powerful" type="button" data-feature="powerful" aria-pressed="false" aria-label="Powerful mode">
+              <Icon name="bolt" size={16} />
+              <span>Powerful</span>
+            </button>
+            <button class="feature-btn converti" type="button" data-feature="converti" aria-pressed="false" aria-label="Converti7 cooling capacity">
+              <Icon name="adjust" size={16} />
+              <span data-feature="converti-label">Converti7</span>
+            </button>
+            <button class="feature-btn nanoe" type="button" data-feature="nanoe" aria-pressed="false" aria-label="nanoe X air purifier">
+              <Icon name="nanoe" size={16} />
+              <span>nanoe X</span>
+            </button>
+            <button class="feature-btn display" type="button" data-feature="display" aria-pressed="true" aria-label="Display light">
+              <Icon name="bulb" size={16} />
+              <span>Display</span>
+            </button>
+          </div>
+
+          <!-- Schedules Row -->
+          <div class="schedules-row">
+            <button class="schedule-btn timer" type="button" data-schedule-btn="timer" aria-label="Timers">
+              <Icon name="timer" size={16} />
+              <span>Timers</span>
+            </button>
+            <button class="schedule-btn sleep" type="button" data-schedule-btn="sleep" aria-label="Sleep profiles">
+              <Icon name="moon" size={16} />
+              <span>Sleep</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Upfront Sign-In Modal -->
+    <div class="overlay-backdrop is-hidden" id="signin-overlay" role="dialog" aria-modal="true" aria-labelledby="signin-title">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 id="signin-title">Sign in to Mitra</h3>
+        </div>
+        <div class="error-banner" role="alert"></div>
+        <form id="signin-form">
+          <div class="form-group">
+            <label for="input-username">Mobile or Email</label>
+            <input class="form-input" id="input-username" type="text" autocomplete="username" placeholder="10-digit mobile (+91) or email" required />
+          </div>
+          <div class="form-group">
+            <label for="input-password">Password</label>
+            <input class="form-input" id="input-password" type="password" autocomplete="current-password" placeholder="MirAIe account password" required />
+          </div>
+          <button class="submit-btn" id="signin-submit" type="submit">Sign In</button>
+        </form>
+        <button class="demo-btn" id="try-demo-btn" type="button">Try Demo Mode</button>
+        <p class="privacy-note">
+          Your credentials are encrypted and sent only to MirAIe's authentication server. Nothing is stored on our servers.
+        </p>
+      </div>
+    </div>
+
+    <!-- Timers Modal -->
+    <div class="overlay-backdrop is-hidden" id="timer-overlay" role="dialog" aria-modal="true" aria-labelledby="timer-title">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 id="timer-title">Turn off timer</h3>
+          <button class="modal-close" id="close-timer-modal" type="button" aria-label="Close">✕</button>
+        </div>
+        <p style="font-size: 14px; color: var(--muted);">Choose when you want the AC to turn itself off.</p>
+        <div class="timer-presets">
+          <button class="timer-preset-btn" type="button" data-timer-min="30">30 min</button>
+          <button class="timer-preset-btn" type="button" data-timer-min="60">1 hour</button>
+          <button class="timer-preset-btn" type="button" data-timer-min="120">2 hours</button>
+          <button class="timer-preset-btn" type="button" data-timer-min="240">4 hours</button>
+        </div>
+        <button class="demo-btn" type="button" data-timer-min="0" style="color: #ff6b64;">Clear Timer</button>
+      </div>
+    </div>
+
+    <!-- Sleep Profiles Modal -->
+    <div class="overlay-backdrop is-hidden" id="sleep-overlay" role="dialog" aria-modal="true" aria-labelledby="sleep-title">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 id="sleep-title">Sleep profile: Gentle</h3>
+          <button class="modal-close" id="close-sleep-modal" type="button" aria-label="Close">✕</button>
+        </div>
+        <p style="font-size: 13px; color: var(--muted);">
+          Gentle holds your current temperature for three hours, then warms a degree, then another.
+        </p>
+        <div class="sleep-chart" role="img" aria-label="Hourly night temperature curve">
+          <!-- Rendered dynamically -->
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="submit-btn" id="start-sleep-btn" type="button">Start Profile</button>
+          <button class="demo-btn" id="stop-sleep-btn" type="button" style="display: none; color: #ff6b64;">Stop</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import '../scripts/app/app.ts';
+  </script>
+</Base>

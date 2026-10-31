@@ -124,6 +124,7 @@ html.js .step:not(.is-active) { visibility: hidden; opacity: 0; }
 .step .lede { font-size: 19px; }
 .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; text-shadow: none; }
 .hint { font-size: 14px !important; }
+.hint a { color: var(--text); text-underline-offset: 3px; }
 
 .tally {
   display: grid;
