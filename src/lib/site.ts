@@ -8,7 +8,7 @@ export const SITE = {
   url: 'https://mitra.midoreigh.com',
   title: 'Mitra for MirAIe — every setting on your AC, one tap away',
   description:
-    'A free, open-source Mac menu bar and Android app that lays out every mode, fan speed and air direction of your Panasonic MirAIe AC at once, and draws the air while it flows.',
+    'A free, open-source alternative to the MirAIe app for Panasonic ACs, on Mac and Android. Every mode, fan speed and air direction one tap away, plus timers and sleep profiles.',
   author: { name: 'Mido Reigh', url: 'https://midoreigh.com' },
   blogPost: 'https://midoreigh.com/blog/mitra-for-miraie',
   repo: REPO,
@@ -28,6 +28,14 @@ export const FEATURES: [string, string][] = [
 
 /** Answers are HTML (only <b>), shown as-is on the page and as plain text elsewhere. */
 export const FAQ: { q: string; a: string }[] = [
+  {
+    q: 'Is Mitra an alternative to the MirAIe app?',
+    a: 'Yes. Mitra is a free, open-source alternative to the MirAIe app for Panasonic ACs. You sign in with your MirAIe account and control the same ACs, but every mode, fan speed and air direction is one tap away instead of cycling through them, and it adds timers and sleep profiles. It’s independent and unofficial, not made by Panasonic.',
+  },
+  {
+    q: 'Is there a MirAIe app for Mac?',
+    a: 'Mitra puts your MirAIe AC in your Mac’s menu bar, with the set temperature beside the icon, every control one click away, and Siri and Shortcuts. It runs on macOS 26 or later, on Apple silicon or Intel, and there’s an Android app too.',
+  },
   {
     q: 'Why does my Mac ask before opening it?',
     a: 'Mitra isn’t signed with a paid Apple Developer ID. The first time, click <b>Open Anyway</b> in System Settings › Privacy &amp; Security. After each update macOS asks for your password once or twice before the new version can read your saved sign-in; choose <b>Always Allow</b> and it stays quiet until the next one.',
