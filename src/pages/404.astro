@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Not found — Mitra for MirAIe">
+  <main class="lost">
+    <img src="/icon.png?v=2" width="96" height="96" alt="" />
+    <h1>This page blew away.</h1>
+    <p>There’s nothing here, but your AC is still one tap away.</p>
+    <a class="button primary" href="/">Back to Mitra</a>
+  </main>
+</Base>
+
+<style>
+  .lost {
+    min-height: 100svh;
+    padding: 0 16px;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 18px;
+    text-align: center;
+    background: radial-gradient(50% 40% at 50% 30%, rgb(94 102 118 / 0.5), transparent 70%);
+  }
+  h1 { font-size: clamp(36px, 6vw, 64px); }
+  p { color: var(--muted); }
+  .button { margin-top: 8px; }
+</style>

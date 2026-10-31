@@ -1,0 +1,450 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import '../styles/home.css';
+import Icon from '../components/Icon.astro';
+import Panel from '../components/Panel.astro';
+import Phone from '../components/Phone.astro';
+import { latestReleases, megabytes, REPO } from '../lib/releases';
+import macTimer from '../assets/mac/timer.png';
+import macSleep from '../assets/mac/sleep.png';
+import macEditor from '../assets/mac/profile-editor.png';
+import macSettingsAcs from '../assets/mac/settings-acs.png';
+import macSettingsSiri from '../assets/mac/settings-siri.png';
+import androidPanel from '../assets/android/panel.png';
+import androidConverti from '../assets/android/converti7-strip.png';
+import androidPreview from '../assets/android/preview.png';
+import androidTimer from '../assets/android/timer.png';
+import androidSleep from '../assets/android/sleep.png';
+import androidEditor from '../assets/android/profile-editor.png';
+import androidWidget from '../assets/android/widget.png';
+import androidShortcuts from '../assets/android/shortcuts.png';
+import androidQuickSettings from '../assets/android/quick-settings.png';
+
+const { mac, android } = await latestReleases();
+
+// The scroll story: each step sets the drawn AC to show what the copy describes. `cycle`
+// alternates between settings while the step is on screen.
+const steps = [
+  {
+    state: { on: true, mode: 'cool', fan: 'auto', vertical: 3, horizontal: 3, setpoint: 24 },
+  },
+  {
+    eyebrow: 'Lay it all out',
+    title: 'No more cycling.',
+    body: 'The remote makes Mode a single button: Auto, Cool, Dry, tap after tap. Mitra puts every mode side by side, so Dry is one tap. Fan speed and air direction too.',
+    state: { on: true, mode: 'dry', fan: 'auto', vertical: 3, horizontal: 3, setpoint: 24 },
+    tally: true,
+  },
+  {
+    eyebrow: 'Draw the air',
+    title: 'See what your AC is doing.',
+    body: 'Mitra draws your unit blowing air the way it really does. The flap tilts to the louver you pick; on swing, the air sweeps up and down and side to side at the unit’s own pace.',
+    state: { on: true, mode: 'auto', fan: 'medium', vertical: 0, horizontal: 0, setpoint: 24 },
+  },
+  {
+    eyebrow: 'Fan speed',
+    title: 'Quiet drifts. High rushes.',
+    body: 'Auto, Quiet, Low, Medium and High, named just as the MirAIe app names them. The air takes on each one’s pace, so a glance tells you how hard it’s working.',
+    state: { on: true, mode: 'cool', fan: 'quiet', vertical: 2, horizontal: 3, setpoint: 23 },
+    cycle: [{ fan: 'quiet' }, { fan: 'high' }],
+  },
+  {
+    eyebrow: 'Only what you have',
+    title: 'Warm air rises.',
+    body: 'Heat and nanoe X appear when your unit reports them, and you can switch features on or off for each AC. The panel never offers a button that does nothing.',
+    state: { on: true, mode: 'heat', fan: 'medium', vertical: 1, horizontal: 3, setpoint: 26 },
+  },
+  {
+    eyebrow: 'Always in sync',
+    title: 'Off, gently.',
+    body: 'The fan winds down, the air thins out and the flap swings shut, like the real thing. Change anything with the remote or the MirAIe app and Mitra follows straight away.',
+    state: { on: false, mode: 'cool', fan: 'auto', vertical: 3, horizontal: 3, setpoint: 24 },
+  },
+];
+
+const features = [
+  ['Power and temperature', 'On and off, 16 to 30 °C with − and +, and the room temperature your AC measures.'],
+  ['Every mode', 'Auto, Cool, Dry and Fan, plus Heat on units that have it.'],
+  ['Every fan speed', 'Auto, Quiet, Low, Medium and High, as the MirAIe app names them.'],
+  ['Both louvers', 'Swing, or any of five positions up and down and left and right.'],
+  ['The extras', 'Eco, Powerful, Converti7 cooling levels, nanoe X and the display light.'],
+  ['Timers and sleep', 'Off or on at a set time, and sleep profiles with a temperature for each hour of the night.'],
+  ['Every AC', 'Switch between all the ACs on your MirAIe account.'],
+  ['Try it first', 'A demo AC before you sign in, and Preview Mode that never touches your unit.'],
+];
+---
+
+<Base>
+  <header class="bar">
+    <a class="brand" href="/" aria-label="Mitra for MirAIe, home">
+      <img src="/icon.png?v=2" width="28" height="28" alt="" />
+      <span>Mitra</span>
+    </a>
+    <nav>
+      <a href="#mac">Mac</a>
+      <a href="#timers">Timers &amp; sleep</a>
+      <a href="#android">Android</a>
+      <a href="#privacy">Privacy</a>
+      <a class="cta" href="#download">Download</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="story" style={`--steps: ${steps.length}`}>
+      <div class="stage">
+        <div class="backdrop" aria-hidden="true"></div>
+        <canvas class="scene" aria-hidden="true"></canvas>
+        <button class="unit" data-unit aria-label="Turn the AC off"></button>
+
+        <div class="copy">
+          {steps.map((step, i) => (
+            <div class:list={['step', { hero: i === 0, 'is-active': i === 0 }]} data-step={i}>
+              {i === 0 ? (
+                <>
+                  <p class="eyebrow">For Panasonic ACs on MirAIe · Mac &amp; Android</p>
+                  <h1>Every setting,<br />one tap away.</h1>
+                  <p class="lede">
+                    Mitra lays out every mode, fan speed and air direction of your AC at once, and draws the air
+                    while it flows. Free and open source.
+                  </p>
+                  <div class="actions">
+                    <a class="button primary" href="#download"><Icon name="apple" size={18} />Download for Mac</a>
+                    <a class="button" href="#download"><Icon name="android" size={18} />Get it for Android</a>
+                  </div>
+                  <p class="hint">Go on, try the panel. It’s the real thing, minus the AC.</p>
+                </>
+              ) : (
+                <>
+                  <p class="eyebrow">{step.eyebrow}</p>
+                  <h2>{step.title}</h2>
+                  <p>{step.body}</p>
+                  {step.tally && (
+                    <div class="tally" aria-label="Three taps on the remote, one in Mitra">
+                      <span>Remote</span><i /><i /><i /><em>3 taps</em>
+                      <span>Mitra</span><i class="one" /><em>1 tap</em>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div class="dock">
+          <Panel />
+        </div>
+
+        <ol class="dots" aria-hidden="true">
+          {steps.map((_, i) => <li class:list={{ on: i === 0 }} />)}
+        </ol>
+      </div>
+
+      <div class="beats">
+        {steps.map((step, i) => (
+          <div
+            class="beat"
+            data-beat={i}
+            data-state={JSON.stringify(step.state)}
+            data-cycle={step.cycle ? JSON.stringify(step.cycle) : undefined}
+          />
+        ))}
+      </div>
+    </section>
+
+    <section class="platform mac" id="mac">
+      <div class="intro">
+        <p class="eyebrow">On your Mac</p>
+        <h2 data-split>Lives in your menu bar.</h2>
+        <p>
+          The set temperature sits right beside the menu bar icon. One click opens the panel, from anywhere on
+          your Mac. Right-click for Refresh, Preview Mode and Settings.
+        </p>
+      </div>
+      <figure class="video" data-tilt>
+        <video
+          src="/media/mitra-demo.mp4"
+          poster="/media/mitra-demo-poster.jpg"
+          width="1578"
+          height="1260"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          aria-label="Opening Mitra from the menu bar, then switching modes and fan speeds with one click while the drawn AC's air changes colour, speed and direction"
+        ></video>
+      </figure>
+      <div class="points">
+        <div data-reveal>
+          <h3>“Turn on the AC in Mitra for MirAIe.”</h3>
+          <p>Siri handles power, temperature, mode and fan speed. Every action is in Shortcuts too, so the AC can switch itself on before you get home.</p>
+        </div>
+        <div data-reveal>
+          <h3>Made for your AC</h3>
+          <p>Switch Heating, nanoe X and Converti7 on or off for each unit, so the panel matches your model exactly.</p>
+        </div>
+        <div data-reveal>
+          <h3>Updates, quietly</h3>
+          <p>Mitra checks GitHub once a day and offers the new version right in the panel. You can turn that off.</p>
+        </div>
+      </div>
+      <div class="windows">
+        <figure data-drift="-6">
+          <Image src={macSettingsAcs} alt="Mac Settings, Air Conditioners: switches for Heating, nanoe X air purifier and Converti7 cooling levels" widths={[572, 1144]} sizes="(min-width: 900px) 440px, 80vw" />
+        </figure>
+        <figure data-drift="8">
+          <Image src={macSettingsSiri} alt="Mac Settings, Siri and Widgets: the phrases Siri understands, and how to add a widget" widths={[572, 1144]} sizes="(min-width: 900px) 480px, 84vw" />
+        </figure>
+      </div>
+    </section>
+
+    <section class="nights" id="timers">
+      <div class="intro">
+        <p class="eyebrow">New on Mac and Android</p>
+        <h2 data-split>Set it, and sleep on it.</h2>
+        <p>
+          Timers and sleep profiles, a feature you won’t find in other apps for these ACs. Your AC keeps them
+          itself, so they carry on while your Mac sleeps or your phone is off.
+        </p>
+        <div class="switch" role="group" aria-label="Show screens from">
+          <button data-platform="mac" aria-pressed="true"><Icon name="apple" size={16} />Mac</button>
+          <button data-platform="android" aria-pressed="false"><Icon name="android" size={16} />Android</button>
+        </div>
+      </div>
+      <div class="columns" data-show="mac">
+        {[
+          {
+            title: 'Timers',
+            body: 'Off in an hour, or on by morning. Pick a time, or anywhere from 30 minutes to 4 hours from now.',
+            mac: macTimer, android: androidTimer, bar: 'linear-gradient(90deg, #313641, #43464f, #313641)',
+            alt: 'the Timer controls, with Turn off and Turn on times and quick picks from 30 minutes to 4 hours',
+          },
+          {
+            title: 'Sleep profiles',
+            body: 'Start one and your AC follows it through the night. Gentle, the AC’s own, holds your temperature for three hours, then warms a degree, then another.',
+            mac: macSleep, android: androidSleep, bar: 'linear-gradient(90deg, #313641, #43464f, #313641)',
+            alt: 'the Sleep controls, with Gentle and a profile of your own ready to start',
+          },
+          {
+            title: 'Your own nights',
+            body: 'Drag a bar to set each hour’s temperature, and choose whether the AC turns off when the profile ends.',
+            mac: macEditor, android: androidEditor, bar: '#060a19',
+            alt: 'the profile editor, with a bar for each hour’s temperature',
+          },
+        ].map((col) => (
+          <figure data-reveal>
+            <div class="frames">
+              <div class="for-mac">
+                <Image src={col.mac} class:list={{ cut: col.mac !== macEditor }} alt={`On the Mac: ${col.alt}`} widths={[480, 960]} sizes="(min-width: 900px) 340px, 80vw" />
+              </div>
+              <Phone class="for-android" src={col.android} bar={col.bar} alt={`On Android: ${col.alt}`} widths={[360, 720]} sizes="(min-width: 900px) 240px, 60vw" />
+            </div>
+            <figcaption>
+              <h3>{col.title}</h3>
+              <p>{col.body}</p>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <p class="aside" data-reveal>
+        Whatever’s set shows under the drawn AC, such as “Off at 9:20 PM” or “Night · hour 2 of 4”.
+      </p>
+    </section>
+
+    <section class="platform android" id="android">
+      <div class="intro">
+        <p class="eyebrow">On your phone</p>
+        <h2 data-split>Your AC, alive on Android.</h2>
+        <p>
+          The AC and its air fill the screen, and every control sits on a glass panel at the bottom, right under
+          your thumb.
+        </p>
+      </div>
+      <div class="phones">
+        <Phone data-fan="-1" bar="linear-gradient(90deg, #454d5b, #5f636f, #454d5b)" src={androidConverti} alt="The Converti7 strip on Android: Off and every cooling level from 40% to 110% in one row above the button" widths={[400, 800]} sizes="(min-width: 900px) 300px, 42vw" />
+        <Phone class="hero-phone" data-fan="0" bar="linear-gradient(90deg, #454d5b, #5f636f, #454d5b)" src={androidPanel} alt="Mitra on Android in Cool mode at 27°, with every setting one tap away on the glass panel" widths={[400, 800]} sizes="(min-width: 900px) 320px, 52vw" />
+        <Phone data-fan="1" bar="linear-gradient(90deg, #454d5b, #5f636f, #454d5b)" src={androidPreview} alt="Preview Mode on Android in Auto, with a sleep profile and an off timer shown under the AC" widths={[400, 800]} sizes="(min-width: 900px) 300px, 42vw" />
+      </div>
+      <div class="captions">
+        <div data-reveal>
+          <h3>Converti7, one tap</h3>
+          <p>A glass strip with Off and every level from 40% to 110% in one row, to save energy or cool harder.</p>
+        </div>
+        <div data-reveal>
+          <h3>Every control under your thumb</h3>
+          <p>Louvers, fan speed, mode and extras on one glass panel at the bottom.</p>
+        </div>
+        <div data-reveal>
+          <h3>Preview Mode</h3>
+          <p>Try every control without touching your AC. Timers and sleep show under the unit.</p>
+        </div>
+      </div>
+      <h3 class="subhead" data-reveal>Or skip the app.</h3>
+      <div class="phones">
+        <Phone data-fan="-1" bar="linear-gradient(90deg, #0e2243, #112343, #182141)" src={androidWidget} alt="Mitra's home-screen widget: the AC's name and status, Cooling to 27°, a power button, the set and room temperature, and minus and plus" widths={[400, 800]} sizes="(min-width: 900px) 300px, 42vw" />
+        <Phone class="hero-phone" data-fan="0" bar="linear-gradient(90deg, #0e2243, #112343, #182141)" src={androidShortcuts} alt="Long-pressing Mitra's icon: AC on, AC off, Cooler and Warmer" widths={[400, 800]} sizes="(min-width: 900px) 320px, 52vw" />
+        <Phone data-fan="1" src={androidQuickSettings} alt="Android Quick Settings with Mitra's AC tile" widths={[400, 800]} sizes="(min-width: 900px) 300px, 42vw" />
+      </div>
+      <div class="captions">
+        <div data-reveal>
+          <h3>Home-screen widget</h3>
+          <p>What the AC is doing, a power button, the set and room temperature, and − and +.</p>
+        </div>
+        <div data-reveal>
+          <h3>App shortcuts</h3>
+          <p>Long-press the icon for AC on, AC off, Cooler and Warmer.</p>
+        </div>
+        <div data-reveal>
+          <h3>Quick Settings tile</h3>
+          <p>Turn the AC on or off from anywhere. The tile stays lit while it runs.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="intro">
+        <p class="eyebrow">Everything the MirAIe app does</p>
+        <h2 data-split>Just faster.</h2>
+      </div>
+      <ul class="grid">
+        {features.map(([title, body]) => (
+          <li data-reveal>
+            <h3>{title}</h3>
+            <p>{body}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="privacy" id="privacy">
+      <div class="intro">
+        <p class="eyebrow">Privacy</p>
+        <h2 data-split>Your password stays yours.</h2>
+      </div>
+      <div class="trio">
+        <div data-reveal>
+          <Icon name="lock" size={28} />
+          <h3>Locked away</h3>
+          <p>In the Keychain on your Mac, encrypted with the Android Keystore on your phone, and only ever sent to MirAIe’s own servers.</p>
+        </div>
+        <div data-reveal>
+          <Icon name="eye" size={28} />
+          <h3>No analytics</h3>
+          <p>None. Apart from MirAIe, the Mac app talks only to GitHub to check for updates. The Android app talks to nothing else at all.</p>
+        </div>
+        <div data-reveal>
+          <Icon name="code" size={28} />
+          <h3>Read every line</h3>
+          <p>Free and MIT-licensed. The whole source is on GitHub, SwiftUI on the Mac and native Kotlin on Android.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="download" id="download">
+      <div class="intro">
+        <p class="eyebrow">Free, for good</p>
+        <h2 data-split>Get Mitra.</h2>
+        <p>Works with Panasonic ACs you control through the MirAIe app.</p>
+      </div>
+      <div class="cards">
+        <div class="card" data-reveal>
+          <Icon name="apple" size={32} />
+          <h3>Mac</h3>
+          <p>macOS 26 or later, on Apple silicon or Intel.</p>
+          <p class="meta">Version {mac.version} · {megabytes(mac.size)}</p>
+          <div class="links">
+            <a class="button primary" href={mac.download}>Download .dmg</a>
+            <a class="notes" href={mac.page}>What’s new <Icon name="arrow" size={14} /></a>
+          </div>
+        </div>
+        <div class="card" data-reveal>
+          <Icon name="android" size={32} />
+          <h3>Android</h3>
+          <p>Android 8.0 or later.</p>
+          <p class="meta">Version {android.version} · {megabytes(android.size)}</p>
+          <div class="links">
+            <a class="button primary" href={android.download}>Download .apk</a>
+            <a class="notes" href={android.page}>What’s new <Icon name="arrow" size={14} /></a>
+          </div>
+        </div>
+        <div class="card soon" data-reveal>
+          <Icon name="sparkle" size={32} />
+          <h3>iPhone</h3>
+          <p>In the works.</p>
+          <div class="links"><span class="notes">Coming soon</span></div>
+        </div>
+      </div>
+      <div class="star" data-reveal>
+        <p>Free and open source. If Mitra helps, a star on GitHub helps others find it.</p>
+        <a class="button" href={REPO}><Icon name="star" size={18} />Star on GitHub</a>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>Why does my Mac ask before opening it?</summary>
+          <p>
+            Mitra isn’t signed with a paid Apple Developer ID. The first time, click <b>Open Anyway</b> in System
+            Settings › Privacy &amp; Security. After each update macOS asks for your password once or twice before
+            the new version can read your saved sign-in; choose <b>Always Allow</b> and it stays quiet until the
+            next one.
+          </p>
+        </details>
+        <details>
+          <summary>How do I install the Android app?</summary>
+          <p>
+            Mitra isn’t on Google Play, so download the APK on your phone and open it. If Android asks, allow your
+            browser to <b>install unknown apps</b>, then tap <b>Install</b>. If Play Protect says it doesn’t
+            recognise the app, tap <b>More details › Install anyway</b>. To update, install the new APK over the
+            old one; you stay signed in.
+          </p>
+        </details>
+        <details>
+          <summary>Where are the Mac widgets?</summary>
+          <p>
+            The widgets and the Control Center toggle need an Apple developer team, so the downloaded app doesn’t
+            include them. Build Mitra from source with your own team to get them. Siri and Shortcuts work either
+            way.
+          </p>
+        </details>
+        <details>
+          <summary>Can I try it without signing in?</summary>
+          <p>
+            Yes. Choose <b>Try it without an account</b> for a demo AC, or switch on <b>Preview Mode</b> to try the
+            controls without sending anything to your real unit.
+          </p>
+        </details>
+        <details>
+          <summary>How does it talk to my AC?</summary>
+          <p>
+            The way the official app does. MirAIe has no public API, so Mitra signs in to your MirAIe account
+            over REST, then sends commands and receives live status over MQTT. Commands update the panel
+            instantly, and the AC confirms them a second or two later.
+          </p>
+        </details>
+      </div>
+      <div class="help" data-reveal>
+        <p>Something not working, or missing?</p>
+        <div class="links">
+          <a href={`${REPO}/issues/new?template=bug_report.yml`}><Icon name="bug" size={18} />Report a problem</a>
+          <a href={`${REPO}/issues/new?template=feature_request.yml`}><Icon name="bulb" size={18} />Suggest a feature</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>
+      Made by <a href="https://midoreigh.com">Midoreigh</a>. Read
+      <a href="https://midoreigh.com/blog/mitra-for-miraie">why I built it</a>.
+      <a href={REPO}><Icon name="github" size={16} /> Source on GitHub</a>
+    </p>
+    <p class="fine">
+      Mitra is an independent, unofficial project, not affiliated with or endorsed by Panasonic. MirAIe is
+      Panasonic’s trademark. MIT licence.
+    </p>
+  </footer>
+</Base>
+
+<script>
+  import '../scripts/home';
+</script>

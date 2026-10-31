@@ -1,0 +1,172 @@
+---
+// A working copy of Mitra's control panel, driving the drawn AC on the page.
+import Icon from './Icon.astro';
+
+const modes = [
+  ['auto', 'Auto'], ['cool', 'Cool'], ['dry', 'Dry'], ['fan', 'Fan'], ['heat', 'Heat'],
+] as const;
+const fans = [['auto', 'Auto'], ['quiet', 'Quiet'], ['low', 'Low'], ['medium', 'Medium'], ['high', 'High']] as const;
+const vertical = ['Highest', 'High', 'Middle', 'Low', 'Lowest'];
+const horizontal = ['Far left', 'Left', 'Centre', 'Right', 'Far right'];
+---
+
+<div class="panel" role="group" aria-label="Try the controls">
+  <div class="row top">
+    <button class="power" data-power aria-pressed="true" aria-label="Power">
+      <Icon name="power" />
+    </button>
+    <div class="readout">
+      <span class="temp"><span data-temp>24</span>°</span>
+      <span class="status" data-summary aria-live="polite">Cooling to 24°</span>
+    </div>
+    <div class="stepper">
+      <button data-step-temp="-1" aria-label="Cooler"><Icon name="minus" /></button>
+      <button data-step-temp="1" aria-label="Warmer"><Icon name="plus" /></button>
+    </div>
+  </div>
+
+  <div class="row">
+    <span class="label">Mode<b data-label="mode">Cool</b></span>
+    <div class="track">
+      {modes.map(([id, name]) => (
+        <button class="pill mode" data-set="mode" data-value={id} aria-label={name} aria-pressed="false">
+          <Icon name={id} size={18} />
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="row">
+    <span class="label">Fan<b data-label="fan">Auto</b></span>
+    <div class="track">
+      {fans.map(([id, name]) => (
+        <button class="pill fan" data-set="fan" data-value={id} aria-pressed="false">
+          {name === 'Medium' ? 'Med' : name}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="row louvers">
+    <div class="track" aria-label="Up and down">
+      <button class="pill" data-set="vertical" data-value="0" aria-label="Swing up and down" aria-pressed="false"><Icon name="updown" size={16} /></button>
+      {vertical.map((name, i) => (
+        <button class="pill" data-set="vertical" data-value={i + 1} aria-label={name} aria-pressed="false">
+          <span class="vane" style={`--a: ${12 + i * 15}deg`} />
+        </button>
+      ))}
+    </div>
+    <div class="track" aria-label="Left and right">
+      <button class="pill" data-set="horizontal" data-value="0" aria-label="Swing left and right" aria-pressed="false"><Icon name="leftright" size={16} /></button>
+      {horizontal.map((name, i) => (
+        <button class="pill" data-set="horizontal" data-value={i + 1} aria-label={name} aria-pressed="false">
+          <span class="vane upright" style={`--a: ${(i - 2) * 17}deg`} />
+        </button>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .panel {
+    display: grid;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 28px;
+    background: rgba(16, 17, 22, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(22px) saturate(140%);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
+  }
+  .row { display: flex; align-items: center; gap: 12px; }
+  .top { padding: 0 2px 2px; }
+  button {
+    font: inherit;
+    color: inherit;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button:focus-visible { outline: 2px solid var(--glow); outline-offset: 2px; }
+
+  .power {
+    width: 44px; height: 44px;
+    flex: none;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.7);
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+  }
+  .power[aria-pressed='true'] {
+    background: #fff;
+    color: #111;
+    box-shadow: 0 0 24px -4px rgba(255, 255, 255, 0.5);
+  }
+  .readout { display: grid; line-height: 1.1; flex: 1; min-width: 0; }
+  .temp { font-size: 34px; font-weight: 200; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .status { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .stepper { display: flex; gap: 8px; }
+  .stepper button {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: rgba(255, 255, 255, 0.08);
+    transition: background 0.2s, transform 0.15s;
+  }
+  .stepper button:hover { background: rgba(255, 255, 255, 0.16); }
+  .stepper button:active { transform: scale(0.92); }
+
+  .label {
+    width: 64px; flex: none;
+    font-size: 12px; color: var(--muted);
+    display: grid; line-height: 1.25;
+  }
+  .label b { color: var(--text); font-size: 14px; font-weight: 600; }
+  .track {
+    flex: 1;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.055);
+  }
+  .pill {
+    height: 36px;
+    border-radius: 999px;
+    display: grid; place-items: center;
+    font-size: 13px; font-weight: 500;
+    color: rgba(255, 255, 255, 0.72);
+    transition: background 0.35s, color 0.35s, box-shadow 0.35s;
+  }
+  .pill:hover { color: #fff; background: rgba(255, 255, 255, 0.06); }
+  .pill[aria-pressed='true'] { background: #fff; color: #111; }
+  .pill.mode[aria-pressed='true'] {
+    background: var(--control);
+    color: #fff;
+    box-shadow: 0 0 22px -4px var(--tint);
+  }
+  .vane {
+    display: block;
+    width: 14px; height: 2px; border-radius: 2px;
+    background: currentColor;
+    transform: rotate(var(--a));
+    transform-origin: 10% 50%;
+  }
+  .vane.upright { width: 2px; height: 14px; transform-origin: 50% 10%; transform: rotate(calc(var(--a) * -1)); }
+  .louvers { gap: 8px; }
+  .louvers .pill { height: 32px; }
+
+  .panel.off .pill.mode[aria-pressed='true'] { background: rgba(255, 255, 255, 0.18); box-shadow: none; }
+
+  @media (max-width: 640px) {
+    .panel { padding: 12px; gap: 8px; border-radius: 24px; }
+    .temp { font-size: 30px; }
+    .label { width: 52px; }
+    .pill { height: 34px; font-size: 12px; }
+    .louvers { display: none; }
+  }
+</style>

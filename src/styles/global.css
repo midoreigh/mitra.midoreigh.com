@@ -1,0 +1,76 @@
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('inter-ui/variable-latin/InterVariable-subset.woff2') format('woff2');
+}
+
+/* Mitra's own look: the graphite night sky behind the drawn AC, white type, and the current
+   mode's colours (set from script) for accents. */
+:root {
+  --night: #07090f;
+  --ink: #0c0f17;
+  --text: #f4f6fb;
+  --muted: rgba(226, 232, 245, 0.62);
+  --line: rgba(255, 255, 255, 0.09);
+  --tint: rgb(84, 173, 255);
+  --glow: rgb(125, 227, 255);
+  --control: rgb(31, 107, 230);
+  --gutter: clamp(16px, 5vw, 72px);
+  --bar: 64px;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+html { background: var(--night); }
+body {
+  background: var(--night);
+  color: var(--text);
+  font-family: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* A capital I with serifs, so “MirAIe” never reads as “MirAle”. */
+  font-feature-settings: 'cv08', 'cv11';
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+a { color: inherit; }
+img, video { display: block; max-width: 100%; height: auto; }
+h1, h2, h3 { margin: 0; font-weight: 600; letter-spacing: -0.035em; line-height: 1.02; }
+h3 { letter-spacing: -0.015em; line-height: 1.25; }
+p { margin: 0; }
+::selection { background: var(--control); color: #fff; }
+
+.eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--glow);
+  transition: color 0.8s;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background 0.25s, transform 0.25s, box-shadow 0.4s;
+}
+.button:hover { background: rgba(255, 255, 255, 0.16); transform: translateY(-1px); }
+.button.primary { background: #fff; color: #0b0d13; border-color: transparent; }
+.button.primary:hover { box-shadow: 0 10px 40px -8px var(--tint); }
