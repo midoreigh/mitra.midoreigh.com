@@ -314,9 +314,10 @@ figure { margin: 0; }
   flex-wrap: wrap;
   align-items: center;
   gap: 18px;
-  min-height: 48px;
+  min-height: 72px; /* 48px button + 24px padding-top */
 }
 .card .notes { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--muted); text-decoration: none; }
+.card.soon .notes { height: 48px; }
 .card a.notes:hover { color: var(--text); }
 .card:hover { box-shadow: 0 30px 80px -30px rgb(84 173 255 / 0.45); }
 .card.soon { border-style: dashed; background: none; }
