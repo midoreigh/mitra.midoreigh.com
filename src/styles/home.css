@@ -307,7 +307,15 @@ figure { margin: 0; }
 .card p { color: var(--muted); font-size: 15px; line-height: 1.5; }
 .card p:not(.meta) { min-height: 3em; }
 .card .meta { font-size: 13px; font-variant-numeric: tabular-nums; }
-.card .links { margin-top: auto; padding-top: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+.card .links {
+  margin-top: auto;
+  padding-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  min-height: 48px;
+}
 .card .notes { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--muted); text-decoration: none; }
 .card a.notes:hover { color: var(--text); }
 .card:hover { box-shadow: 0 30px 80px -30px rgb(84 173 255 / 0.45); }
